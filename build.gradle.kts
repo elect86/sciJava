@@ -12,6 +12,8 @@ plugins {
 
     // Apply the Kotlin JVM plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm") version "1.4.10"
+
+    `maven-publish` // jitpack
 }
 
 repositories {
@@ -58,4 +60,15 @@ val functionalTest by tasks.registering(Test::class) {
 val check by tasks.getting(Task::class) {
     // Run the functional tests as part of `check`
     dependsOn(functionalTest)
+}
+
+val sourceJar = task("sourceJar", Jar::class) {
+    dependsOn(tasks.classes)
+    archiveClassifier.set("sources")
+    from(sourceSets.main.get().allSource)
+}
+
+publishing.publications.register("mavenJava", MavenPublication::class) {
+    from(components["java"])
+    artifact(sourceJar)
 }

@@ -9,12 +9,18 @@
 plugins {
     // Apply the Java Gradle plugin development plugin to add support for developing Gradle plugins
     `java-gradle-plugin`
-
     // Apply the Kotlin JVM plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm") version "1.4.10"
+    // jitpack & gradle portal
+    `maven-publish`
 
-    `maven-publish` // jitpack
+    `kotlin-dsl`
+
+    id("com.gradle.plugin-publish") version "0.12.0"
 }
+
+group = "com.github.elect86"
+version = "0.0.3"
 
 repositories {
     // Use jcenter for resolving dependencies.
@@ -36,10 +42,19 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }
 
+pluginBundle {
+    website = "https://github.com/elect86/sciJava/tree/master"
+    vcsUrl = "https://github.com/elect86/sciJava.git"
+    tags = listOf("sciJava")
+}
+
 gradlePlugin {
     // Define the plugin
-    val greeting by plugins.creating {
-        id = "sciJava.greeting"
+    plugins.create("sciJava") {
+        //        id = "sciJava.greeting"
+        id = "com.github.elect86.sciJava"
+        displayName = "sciJava plugin"
+        description = "plugin to easier version alignment for sciJava in Gradle"
         implementationClass = "sciJava.SciJavaPlugin"
     }
 }
@@ -68,7 +83,9 @@ val sourceJar = task("sourceJar", Jar::class) {
     from(sourceSets.main.get().allSource)
 }
 
-publishing.publications.register("mavenJava", MavenPublication::class) {
-    from(components["java"])
-    artifact(sourceJar)
+publishing {
+    publications.register("mavenJava", MavenPublication::class) {
+        from(components["java"])
+        artifact(sourceJar)
+    }
 }

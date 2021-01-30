@@ -28,19 +28,12 @@ fun getPom(base: Boolean, version: String): String {
  */
 class SciJavaPlugin : Plugin<Project> {
     override fun apply(project: Project) {
-        // Register a task
-        project.tasks.register("greeting") { task ->
-            task.doLast {
-                println("Hello from plugin 'sciJava.greeting'")
-
-                readKotlinVersion()
-                fillDeps()
-
-                deps.forEach { (k, v) -> println("[$k] $v") }
-            }
-        }
+        println("Hello from plugin 'sciJava.greeting'")
+        readKotlinVersion()
+        fillDeps()
     }
 }
+
 
 fun readKotlinVersion() {
 
@@ -61,7 +54,7 @@ fun readKotlinVersion() {
                 val prop = child.childNodes.item(j)
 
                 if (prop.nodeType == Node.ELEMENT_NODE && prop.nodeName == "kotlin.version")
-                    deps["kotlin"] = prop.textContent
+                    versions["kotlin"] = prop.textContent
             }
     }
 }
@@ -88,10 +81,10 @@ fun fillDeps() {
 
                     val dep = prop.nodeName.dropLast(8)
                     val content = prop.textContent
-                    deps[dep] = when {
+                    versions[dep] = when {
                         content.startsWith("\${") && content.endsWith(".version}") -> { // ${imagej1.version}
                             val resolve = content.drop(2).dropLast(9)
-                            deps[resolve] ?: error("cannot resolve $resolve")
+                            versions[resolve] ?: error("cannot resolve $resolve")
                         }
                         else -> content
                     }
@@ -100,4 +93,4 @@ fun fillDeps() {
     }
 }
 
-val deps = mutableMapOf<String, String>()
+val versions = mutableMapOf<String, String>()

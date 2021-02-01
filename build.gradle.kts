@@ -89,3 +89,8 @@ publishing {
         artifact(sourceJar)
     }
 }
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}

@@ -28,7 +28,7 @@ fun getPom(base: Boolean, version: String): String {
  */
 class SciJavaPlugin : Plugin<Project> {
     override fun apply(project: Project) {
-        println("Hello from plugin 'sciJava.greeting'")
+//        println("Hello from plugin 'sciJava.greeting'")
         readKotlinVersion()
         fillDeps()
     }

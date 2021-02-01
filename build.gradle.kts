@@ -77,16 +77,16 @@ val check by tasks.getting(Task::class) {
     dependsOn(functionalTest)
 }
 
-val sourceJar = task("sourceJar", Jar::class) {
-    dependsOn(tasks.classes)
-    archiveClassifier.set("sources")
-    from(sourceSets.main.get().allSource)
-}
+//val sourceJar = task("sourceJar", Jar::class) {
+//    dependsOn(tasks.classes)
+//    archiveClassifier.set("sources")
+//    from(sourceSets.main.get().allSource)
+//}
 
 publishing {
     publications.register("mavenJava", MavenPublication::class) {
         from(components["java"])
-        artifact(sourceJar)
+//        artifact(sourceJar)
     }
 }
 

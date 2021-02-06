@@ -7,6 +7,7 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.Plugin
 import org.gradle.api.tasks.Input
+import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.create
 import org.w3c.dom.Node
 import org.xml.sax.InputSource
@@ -40,13 +41,14 @@ class SciJavaPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         println("SciJavaPlugin::apply")
 
-        val extension = project.extensions.create<SciJavaPluginExtension>("sciJava")
+        project.extensions.create<SciJavaPluginExtension>("sciJava")
 
         readKotlinVersion()
         fillDeps()
     }
 }
 
+fun Project.sciJava(block: SciJavaPluginExtension.() -> Unit) = extensions.configure(block)
 
 fun readKotlinVersion() {
 

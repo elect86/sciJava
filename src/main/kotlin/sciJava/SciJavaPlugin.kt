@@ -23,12 +23,16 @@ fun getPom(base: Boolean, version: String): String {
     return URL(adr).readText()
 }
 
-/**
- * A simple 'hello world' plugin.
- */
+open class SciJavaPluginExtension {
+    var message = "Hello from GreetingPlugin"
+}
+
 class SciJavaPlugin : Plugin<Project> {
+    init {
+        println("SciJavaPlugin::init")
+    }
     override fun apply(project: Project) {
-//        println("Hello from plugin 'sciJava.greeting'")
+        println("SciJavaPlugin::apply")
         readKotlinVersion()
         fillDeps()
     }

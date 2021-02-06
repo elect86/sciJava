@@ -26,7 +26,7 @@ fun getPom(base: Boolean, version: String): String {
     return URL(adr).readText()
 }
 
-class SciJavaPluginExtension {
+open class SciJavaPluginExtension {
     var greeter = "Baeldung"
     var message = "Message from the plugin!"
     fun now() = println("now")

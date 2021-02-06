@@ -3,8 +3,11 @@
  */
 package sciJava
 
+import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.Plugin
+import org.gradle.api.tasks.Input
+import org.gradle.kotlin.dsl.create
 import org.w3c.dom.Node
 import org.xml.sax.InputSource
 import java.io.StringReader
@@ -23,8 +26,11 @@ fun getPom(base: Boolean, version: String): String {
     return URL(adr).readText()
 }
 
-open class SciJavaPluginExtension {
-    var message = "Hello from GreetingPlugin"
+class SciJavaPluginExtension {
+    var greeter = "Baeldung"
+    var message = "Message from the plugin!"
+    fun now() = println("now")
+    // standard getters and setters
 }
 
 class SciJavaPlugin : Plugin<Project> {
@@ -33,6 +39,9 @@ class SciJavaPlugin : Plugin<Project> {
     }
     override fun apply(project: Project) {
         println("SciJavaPlugin::apply")
+
+        val extension = project.extensions.create<SciJavaPluginExtension>("sciJava")
+
         readKotlinVersion()
         fillDeps()
     }

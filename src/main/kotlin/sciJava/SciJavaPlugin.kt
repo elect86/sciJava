@@ -11,40 +11,27 @@ import java.net.URL
 import javax.xml.parsers.DocumentBuilderFactory
 
 
-fun getPom(base: Boolean, version: String): String {
-    var name = "pom-scijava"
-    if (base)
-        name += "-base"
-    val adr = "https://maven.scijava.org/content/groups/public/org/scijava/$name/$version/$name-$version.pom"
-    return URL(adr).readText()
+fun readPom(artifact: String, version: String): String {
+    val domain = "https://maven.scijava.org/content/groups/public/org/scijava/"
+    val spec = "$domain$artifact/$version/$artifact-$version.pom"
+    return URL(spec).readText()
 }
 
-object SciJava {
-    var pomVersion = "29.2.1"
-    var pomBaseVersion = "11.2.0"
-    var pom = getPom(base = false, version = pomVersion)
-    var pomBase = getPom(base = true, version = pomBaseVersion)
+object Pom {
+    var artifact = "pom-scijava"
+    var version = "29.2.1"
 }
 
 class SciJavaPlugin : Plugin<Project> {
-//    init {
-//        println("SciJavaPlugin::init")
-//    }
-    override fun apply(project: Project) {
-//        println("SciJavaPlugin::apply")
 
-//        val sciJava = project.extensions.create<SciJavaPluginExtension>("sciJava")
-//        project.tasks.create<SciJavaTask>("SciJavaTask")
+    override fun apply(project: Project) = parsePom(Pom.artifact, Pom.version)
 
-        readKotlinVersion()
-        fillDeps()
-    }
-
-    fun readKotlinVersion() {
+    fun parsePom(artifact: String, version: String) {
 
         val dbFactory = DocumentBuilderFactory.newInstance()
         val dBuilder = dbFactory.newDocumentBuilder()
-        val doc = dBuilder.parse(InputSource(StringReader(SciJava.pomBase)))
+        val pom = readPom(artifact, version)
+        val doc = dBuilder.parse(InputSource(StringReader(pom)))
 
         //optional, but recommended
         //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
@@ -53,29 +40,25 @@ class SciJavaPlugin : Plugin<Project> {
         for (i in 0 until doc.documentElement.childNodes.length) {
             val child = doc.documentElement.childNodes.item(i)
 
-            if (child.nodeName == "properties")
+            if (child.nodeName == "parent") {
+                println("parent")
+                var group: String? = null
+                var art: String? = null
+                var vers: String? = null
 
                 for (j in 0 until child.childNodes.length) {
-                    val prop = child.childNodes.item(j)
+                    val parent = child.childNodes.item(j)
 
-                    if (prop.nodeType == Node.ELEMENT_NODE && prop.nodeName == "kotlin.version")
-                        versions["kotlin"] = prop.textContent
+                    if (parent.nodeType == Node.ELEMENT_NODE)
+                        when (parent.nodeName) {
+                            "groupId" -> group = parent.textContent
+                            "artifactId" -> art = parent.textContent
+                            "version" -> vers = parent.textContent
+                        }
+                    if (group == "org.scijava" && art != null && vers != null)
+                        parsePom(art, vers)
                 }
-        }
-    }
-
-    fun fillDeps() {
-
-        val dbFactory = DocumentBuilderFactory.newInstance()
-        val dBuilder = dbFactory.newDocumentBuilder()
-        val doc = dBuilder.parse(InputSource(StringReader(SciJava.pom)))
-
-        //optional, but recommended
-        //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-        doc.documentElement.normalize()
-
-        for (i in 0 until doc.documentElement.childNodes.length) {
-            val child = doc.documentElement.childNodes.item(i)
+            }
 
             if (child.nodeName == "properties")
 

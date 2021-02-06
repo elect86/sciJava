@@ -29,7 +29,7 @@ open class SciJavaPluginExtension {
     var pomBase = getPom(base = true, version = pomBaseVersion)
 }
 
-class SciJavaTask : DefaultTask() {
+open class SciJavaTask : DefaultTask() {
     override fun doFirst(action: Action<in Task>): Task {
         println("SciJavaTask::doFirst")
         return this

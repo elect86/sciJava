@@ -4,9 +4,6 @@
 package sciJava
 
 import org.gradle.api.*
-import org.gradle.api.tasks.TaskAction
-import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.create
 import org.w3c.dom.Node
 import org.xml.sax.InputSource
 import java.io.StringReader
@@ -22,24 +19,11 @@ fun getPom(base: Boolean, version: String): String {
     return URL(adr).readText()
 }
 
-open class SciJavaPluginExtension {
+object SciJava {
     var pomVersion = "29.2.1"
     var pomBaseVersion = "11.2.0"
     var pom = getPom(base = false, version = pomVersion)
     var pomBase = getPom(base = true, version = pomBaseVersion)
-}
-
-open class SciJavaTask : DefaultTask() {
-    override fun doFirst(action: Action<in Task>): Task {
-        println("SciJavaTask::doFirst")
-        return this
-    }
-    override fun doLast(action: Action<in Task>): Task {
-        println("SciJavaTask::doLast")
-        return this
-    }
-    @TaskAction
-    fun run() = println("SciJavaTask::run")
 }
 
 class SciJavaPlugin : Plugin<Project> {
@@ -49,18 +33,18 @@ class SciJavaPlugin : Plugin<Project> {
     override fun apply(project: Project) {
 //        println("SciJavaPlugin::apply")
 
-        val sciJava = project.extensions.create<SciJavaPluginExtension>("sciJava")
-        project.tasks.create<SciJavaTask>("SciJavaTask")
+//        val sciJava = project.extensions.create<SciJavaPluginExtension>("sciJava")
+//        project.tasks.create<SciJavaTask>("SciJavaTask")
 
-        readKotlinVersion(sciJava.pomBase)
-        fillDeps(sciJava.pom)
+        readKotlinVersion()
+        fillDeps()
     }
 
-    fun readKotlinVersion(pom: String) {
+    fun readKotlinVersion() {
 
         val dbFactory = DocumentBuilderFactory.newInstance()
         val dBuilder = dbFactory.newDocumentBuilder()
-        val doc = dBuilder.parse(InputSource(StringReader(pom)))
+        val doc = dBuilder.parse(InputSource(StringReader(SciJava.pomBase)))
 
         //optional, but recommended
         //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
@@ -80,11 +64,11 @@ class SciJavaPlugin : Plugin<Project> {
         }
     }
 
-    fun fillDeps(pom: String) {
+    fun fillDeps() {
 
         val dbFactory = DocumentBuilderFactory.newInstance()
         val dBuilder = dbFactory.newDocumentBuilder()
-        val doc = dBuilder.parse(InputSource(StringReader(pom)))
+        val doc = dBuilder.parse(InputSource(StringReader(SciJava.pom)))
 
         //optional, but recommended
         //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
@@ -114,7 +98,5 @@ class SciJavaPlugin : Plugin<Project> {
         }
     }
 }
-
-fun Project.sciJava(block: SciJavaPluginExtension.() -> Unit) = extensions.configure(block)
 
 val versions = mutableMapOf<String, String>()

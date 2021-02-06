@@ -52,7 +52,7 @@ gradlePlugin {
     // Define the plugin
     plugins.create("sciJava") {
         //        id = "sciJava.greeting"
-        id = "com.github.elect86.sciJava"
+        id = "sciJava"
         displayName = "sciJava plugin"
         description = "plugin to easier version alignment for sciJava in Gradle"
         implementationClass = "sciJava.SciJavaPlugin"

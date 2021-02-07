@@ -10,6 +10,23 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/common" />
+            <option value="$PROJECT_DIR$/deprecated" />
+            <option value="$PROJECT_DIR$/launcher" />
+            <option value="$PROJECT_DIR$/legacy" />
+            <option value="$PROJECT_DIR$/mesh" />
+            <option value="$PROJECT_DIR$/mesh-io" />
+            <option value="$PROJECT_DIR$/notebook" />
+            <option value="$PROJECT_DIR$/ops" />
+            <option value="$PROJECT_DIR$/plugins-batch" />
+            <option value="$PROJECT_DIR$/plugins-commands" />
+            <option value="$PROJECT_DIR$/plugins-tools" />
+            <option value="$PROJECT_DIR$/plugins-uploader-ssh" />
+            <option value="$PROJECT_DIR$/plugins-uploader-webdav" />
+            <option value="$PROJECT_DIR$/scripting" />
+            <option value="$PROJECT_DIR$/ui-awt" />
+            <option value="$PROJECT_DIR$/ui-swing" />
+            <option value="$PROJECT_DIR$/updater" />
           </set>
         </option>
       </GradleProjectSettings>

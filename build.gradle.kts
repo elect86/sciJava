@@ -17,6 +17,8 @@ plugins {
     `kotlin-dsl`
 
     id("com.gradle.plugin-publish") version "0.12.0"
+
+    `version-catalog`
 }
 
 group = "com.github.elect86"
@@ -93,4 +95,16 @@ publishing {
 java {
     withJavadocJar()
     withSourcesJar()
+}
+
+catalog {
+
+    versionCatalog {
+
+//        create("sciJava") {
+////            alias()
+//
+//        }
+
+    }
 }

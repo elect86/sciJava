@@ -22,7 +22,7 @@ plugins {
 }
 
 group = "com.github.elect86"
-version = "0.0.5"
+version = "0.0.6"
 
 repositories {
     // Use jcenter for resolving dependencies.
@@ -79,12 +79,6 @@ val check by tasks.getting(Task::class) {
     dependsOn(functionalTest)
 }
 
-//val sourceJar = task("sourceJar", Jar::class) {
-//    dependsOn(tasks.classes)
-//    archiveClassifier.set("sources")
-//    from(sourceSets.main.get().allSource)
-//}
-
 publishing {
     publications.register("mavenJava", MavenPublication::class) {
         from(components["java"])
@@ -92,19 +86,19 @@ publishing {
     }
 }
 
-java {
-    withJavadocJar()
-    withSourcesJar()
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["versionCatalog"])
+        }
+    }
 }
 
+java.withSourcesJar()
+
 catalog {
-
     versionCatalog {
-
-//        create("sciJava") {
-////            alias()
-//
-//        }
-
+        alias("batch-processor").to("org.scijava:batch-processor:0.4.1")
     }
 }
